@@ -6,10 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0807462-f8cb-4d6c-9da0-1f3022e2b1a3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="e0807462-f8cb-4d6c-9da0-1f3022e2b1a3" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -83,6 +80,11 @@
             <path>
               <item name="vincent_mall" type="b2602c69:ProjectViewProjectNode" />
               <item name="vincent_mall" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="vincent_mall" type="b2602c69:ProjectViewProjectNode" />
+              <item name="vincent_mall" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -204,12 +206,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1569056636801</updated>
-      <workItem from="1569056639718" duration="1281000" />
+      <workItem from="1569056639718" duration="1527000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1281000" />
+    <option name="totallyTimeSpent" value="1527000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-7" width="1479" height="878" extended-state="6" />
