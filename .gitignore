@@ -20,3 +20,6 @@ target/
 #sys ignore
 .DS_Store
 Thumbs.db
+
+#Jrebel
+rebel.xml

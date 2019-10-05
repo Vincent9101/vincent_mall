@@ -49,7 +49,7 @@ public class UserServiceImpl implements IUserService {
         if (!res.isSuccessful()) {
             return res;
         }
-        user.setRole(AppConstants.Role.ROLE_NORMAL);
+//        user.setRole(AppConstants.Role.ROLE_NORMAL);
         //MD5加密
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
         int resCount = userMapper.insert(user);
@@ -178,4 +178,13 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.buildSuccessfulDataResponse(user);
     }
+
+    @Override
+    public ServerResponse checkAdmin(User user) {
+        if (user != null && user.getRole().intValue() == AppConstants.Role.ROLE_ADMIN) {
+            return ServerResponse.buildSuccessfulResponse();
+        }
+        return ServerResponse.buildUnSuccessfulMsgResponse("该用户不是管理员！");
+    }
+
 }

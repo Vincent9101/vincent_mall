@@ -84,8 +84,20 @@ public interface IUserService {
 
     /**
      * 获取用户详细信息
+     *
      * @param userId
      * @return
      */
     ServerResponse<User> getDetailInfo(Integer userId);
+
+    /**
+     * 校验是否是管理员
+     *
+     * @param user
+     * @return
+     */
+    ServerResponse checkAdmin(User user);
+
+
+
 }

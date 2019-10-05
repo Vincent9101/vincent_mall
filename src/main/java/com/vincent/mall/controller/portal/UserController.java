@@ -130,7 +130,6 @@ public class UserController {
         if (currentUser == null) {
             return ServerResponse.buildUnSuccessfulCodeAndMsgResponse(EnumResponseCode.NEED_LOGIN.getCode(), "需要登录，status=10");
         }
-
         return iUserService.getDetailInfo(currentUser.getId());
     }
 }
