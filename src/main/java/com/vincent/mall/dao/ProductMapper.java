@@ -1,6 +1,9 @@
 package com.vincent.mall.dao;
 
 import com.vincent.mall.pojo.Product;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ProductMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,9 @@ public interface ProductMapper {
     int updateByPrimaryKeySelective(Product record);
 
     int updateByPrimaryKey(Product record);
+
+    List<Product> selectProductList();
+
+    List<Product> selectProductListByNameAndId(@Param("product_id") Integer productId,
+                                               @Param("product_name") String productName);
 }

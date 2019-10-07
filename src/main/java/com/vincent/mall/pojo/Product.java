@@ -1,19 +1,26 @@
 package com.vincent.mall.pojo;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
     private Integer id;
-
+    @JsonProperty("category_id")
     private Integer categoryId;
 
     private String name;
 
     private String subtitle;
 
+    @JsonProperty("main_imgs")
     private String mainImage;
 
+    @JsonProperty("sub_imgs")
     private String subImages;
 
     private String detail;
