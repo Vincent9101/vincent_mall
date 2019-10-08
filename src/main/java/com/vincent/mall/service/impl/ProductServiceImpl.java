@@ -162,12 +162,12 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ServerResponse<PageInfo> getPortalProductByKeywordCategoryId(String keyword,
-                                                              Integer categoryId,
-                                                              String orderBy,
-                                                              int pageNum,
-                                                              int pageSize) {
-        if (StringUtils.isBlank(keyword) && categoryId == null) {
-            return ServerResponse.buildUnSuccessfulMsgResponse("产品ID为空，参数不正确！！！");
+                                                                        Integer categoryId,
+                                                                        String orderBy,
+                                                                        int pageNum,
+                                                                        int pageSize) {
+        if (categoryId == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品ID或者关键词为空，参数不正确！！！");
         }
         Category category = categoryMapper.selectByPrimaryKey(categoryId);
         if (category == null && StringUtils.isBlank(keyword)) {
@@ -182,12 +182,13 @@ public class ProductServiceImpl implements IProductService {
         }
         PageHelper.startPage(pageNum, pageSize);
         //排序处理
-        if (StringUtils.isBlank(orderBy) &&
+        if (StringUtils.isNotBlank(orderBy) &&
                 AppConstants.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
             String[] orderByArr = orderBy.split(",");
             PageHelper.orderBy(orderByArr[0] + " " + orderByArr[1]);
         }
-        List<Product> productList = productMapper.selectProductListByNameAndCategoryIds(categoryIdList.size() == 0 ? null : categoryIdList, keyword);
+        List<Product> productList = productMapper.selectProductListByNameAndCategoryIds(categoryIdList.size() == 0 ? null : categoryIdList,
+                StringUtils.isBlank(keyword) ? null : keyword);
         PageInfo pageInfoProduct = new PageInfo(productList);
         return ServerResponse.buildSuccessfulDataResponse(pageInfoProduct);
     }
