@@ -1,5 +1,6 @@
 package com.vincent.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.vincent.mall.common.ServerResponse;
 import com.vincent.mall.pojo.Product;
 
@@ -45,13 +46,37 @@ public interface IProductService {
     ServerResponse getProductList(int pageNum, int pageSize);
 
     /**
-     * @description 搜索产品
      * @param pageNum
      * @param pageSize
      * @param productId
      * @param productName
      * @return
+     * @description 搜索产品
      */
-    ServerResponse searchProduct(int pageNum, int pageSize,Integer productId,String productName);
+    ServerResponse searchProduct(int pageNum, int pageSize, Integer productId, String productName);
+
+
+    /**
+     * 前台获取产品详情
+     *
+     * @param productId
+     * @return
+     */
+    ServerResponse portalProductDetail(Integer productId);
+
+    /**
+     * 根据关键字和分类
+     *
+     * @param keyword
+     * @param categoryId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ServerResponse<PageInfo> getPortalProductByKeywordCategoryId(String keyword,
+                                                                 Integer categoryId,
+                                                                 String orderBy,
+                                                                 int pageNum,
+                                                                 int pageSize);
 
 }

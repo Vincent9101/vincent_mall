@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/manage/product/")
-public class ProductController {
+public class BackendProductController {
     @Autowired
     private IUserService iUserService;
     @Autowired

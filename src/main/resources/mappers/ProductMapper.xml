@@ -201,4 +201,21 @@
 
     </select>
 
+    <select id="selectProductListByNameAndCategoryIds" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List"></include>
+        from mmall_product
+        where status=1
+        <if test="product_name!=null">
+            and name like #{product_name}
+        </if>
+        <if test="category_ids!=null">
+            and category_ids in
+            <foreach collection="category_ids" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
 </mapper>

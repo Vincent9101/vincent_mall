@@ -1,5 +1,9 @@
 package com.vincent.mall.constants;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 /**
  * @author: Vincent
  * @created: 2019/10/4  12:52
@@ -16,6 +20,10 @@ public class AppConstants {
     public static final String USER_NAME = "USER_NAME";
 
     public static final String TOKEN_PREFIX = "token_";
+
+    public interface ProductListOrderBy {
+        Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_asc", "price_desc");
+    }
 
     public interface Role {
         /**

@@ -2,11 +2,15 @@ package com.vincent.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.vincent.mall.common.ServerResponse;
+import com.vincent.mall.constants.AppConstants;
+import com.vincent.mall.constants.enumeration.EnumProductStatus;
 import com.vincent.mall.dao.CategoryMapper;
 import com.vincent.mall.dao.ProductMapper;
 import com.vincent.mall.pojo.Category;
 import com.vincent.mall.pojo.Product;
+import com.vincent.mall.service.ICategoryService;
 import com.vincent.mall.service.IProductService;
 import com.vincent.mall.util.DateTimeUtil;
 import com.vincent.mall.util.PropertiesUtil;
@@ -29,6 +33,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ICategoryService iCategoryService;
 
 
     @Override
@@ -137,5 +144,51 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.buildSuccessfulDataResponse(pageInfo);
     }
 
+    @Override
+    public ServerResponse portalProductDetail(Integer productId) {
+        if (productId == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品ID为空，参数不正确！！！");
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品不存在！！！");
+        }
+        if (product.getStatus() != EnumProductStatus.ON_SALE.getCode()) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品下架或者不存在！！！");
+        }
+        return ServerResponse.buildSuccessfulDataResponse(assembleProductDetailVO(product));
+    }
 
+
+    @Override
+    public ServerResponse<PageInfo> getPortalProductByKeywordCategoryId(String keyword,
+                                                              Integer categoryId,
+                                                              String orderBy,
+                                                              int pageNum,
+                                                              int pageSize) {
+        if (StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品ID为空，参数不正确！！！");
+        }
+        Category category = categoryMapper.selectByPrimaryKey(categoryId);
+        if (category == null && StringUtils.isBlank(keyword)) {
+            //分类不存在 返回空结果集 但是也需要分页内容
+            PageHelper.startPage(pageNum, pageSize);
+            PageInfo pageInfo = new PageInfo(Lists.<ProductDetailVO>newArrayList());
+            return ServerResponse.buildSuccessfulDataResponse(pageInfo);
+        }
+        List<Integer> categoryIdList = iCategoryService.selectCategoryAndChildrenById(category.getId()).getData();
+        if (StringUtils.isNotBlank(keyword)) {
+            keyword = new StringBuilder("%").append(keyword).append("%").toString();
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        //排序处理
+        if (StringUtils.isBlank(orderBy) &&
+                AppConstants.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
+            String[] orderByArr = orderBy.split(",");
+            PageHelper.orderBy(orderByArr[0] + " " + orderByArr[1]);
+        }
+        List<Product> productList = productMapper.selectProductListByNameAndCategoryIds(categoryIdList.size() == 0 ? null : categoryIdList, keyword);
+        PageInfo pageInfoProduct = new PageInfo(productList);
+        return ServerResponse.buildSuccessfulDataResponse(pageInfoProduct);
+    }
 }
