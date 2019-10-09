@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping("/user/")
-public class ProtalUserController {
+public class PortalUserController {
 
     @Autowired
     private IUserService iUserService;

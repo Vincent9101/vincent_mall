@@ -25,6 +25,14 @@ public class AppConstants {
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_asc", "price_desc");
     }
 
+    public interface CartStatus {
+        int CHECKED = 1;//购物车选中状态
+        int UN_CHECKED = 0;//未选中状态
+
+        String LIMIT_NUM_SUCCESS="LIMIT_NUM_SUCCESS";
+        String LIMIT_NUM_FAIL="LIMIT_NUM_FAIL";
+    }
+
     public interface Role {
         /**
          * 普通用户

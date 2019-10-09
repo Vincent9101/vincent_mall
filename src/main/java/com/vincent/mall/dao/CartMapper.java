@@ -1,6 +1,9 @@
 package com.vincent.mall.dao;
 
 import com.vincent.mall.pojo.Cart;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,12 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+
+    Cart selectCartByUserIdAndProductId(@Param("user_id") Integer userId,
+                                        @Param("product_id") Integer productId);
+
+    List<Cart> selectCartByUserId(@Param("user_id") Integer userId);
+
+    int selectCartProductCheckedStatusByUserId(@Param("user_id") Integer userId);
 }
