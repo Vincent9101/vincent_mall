@@ -97,9 +97,7 @@
             <if test="checked != null">
                 checked = #{checked,jdbcType=INTEGER},
             </if>
-            <if test="updateTime != null">
-                update_time = now(),
-            </if>
+                update_time = now()
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -130,5 +128,27 @@
         from mmall_cart
         where checked=0
         and user_id=#{user_id}
+    </select>
+
+    <delete id="deleteCartProductByUserIdAndProductIds" parameterType="map">
+        delete from mmall_cart where user_id=#{user_id}
+        <if test="product_ids!=null">
+            and product_id in
+            <foreach collection="product_ids" item="product_id_item" separator="," open="(" close=")">
+                #{product_id_item}
+            </foreach>
+        </if>
+    </delete>
+    <update id="checkedOrUnCheckedProduct" parameterType="map">
+        update mmall_cart
+        set checked=#{checked},
+        update_time=now()
+        where user_id=#{user_id}
+        <if test="product_id!=null">
+            and product_id=#{product_id}
+        </if>
+    </update>
+    <select id="selectCountFromCart" parameterType="int" resultType="int">
+        select IFNULL(sum(quantity),0) as count from mmal_cart where user_id=#{user_id}
     </select>
 </mapper>

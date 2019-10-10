@@ -1,5 +1,6 @@
 package com.vincent.mall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.vincent.mall.common.ServerResponse;
 import com.vincent.mall.constants.AppConstants;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -70,6 +72,12 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.buildSuccessfulDataResponse(cartVO);
     }
 
+    /**
+     * 根据用户ID获取其购物车的产品状态
+     *
+     * @param userId
+     * @return
+     */
     private CartVO getCartVoLimit(Integer userId) {
         CartVO cartVO = new CartVO();
         List<Cart> cartList = cartMapper.selectCartByUserId(userId);
@@ -132,4 +140,45 @@ public class CartServiceImpl implements ICartService {
         return cartMapper.selectCartProductCheckedStatusByUserId(userId) == 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ServerResponse<CartVO> updateProductInCart(Integer userId, Integer productId, Integer count) {
+
+        if (productId == null && count == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("参数有误！");
+        }
+        Cart cart = cartMapper.selectCartByUserIdAndProductId(userId, productId);
+        if (cart != null) {
+            cart.setQuantity(count);
+            cartMapper.updateByPrimaryKeySelective(cart);
+        }
+        return getProductFromCart(userId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ServerResponse<CartVO> deleteProductFromCart(String productIdlist, Integer userId) {
+        List<String> productIds = Splitter.on(",").splitToList(productIdlist);
+        if (CollectionUtils.isEmpty(productIds)) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("产品id为空，参数有误!");
+        }
+        cartMapper.deleteCartProductByUserIdAndProductIds(userId, productIds);
+        return getProductFromCart(userId);
+    }
+
+    @Override
+    public ServerResponse<CartVO> getProductFromCart(Integer userId) {
+        return ServerResponse.buildSuccessfulDataResponse(getCartVoLimit(userId));
+    }
+
+    @Override
+    public ServerResponse<CartVO> selectOrUnSelect(Integer userId, Integer checked, Integer productId) {
+        cartMapper.checkedOrUnCheckedProduct(userId, checked, productId);
+        return getProductFromCart(userId);
+    }
+
+    @Override
+    public ServerResponse<Integer> getCartCount(Integer userId) {
+        return ServerResponse.buildSuccessfulDataResponse(cartMapper.selectCountFromCart(userId));
+    }
 }

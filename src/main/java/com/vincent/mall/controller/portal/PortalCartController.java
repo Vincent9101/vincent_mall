@@ -33,10 +33,71 @@ public class PortalCartController {
         if (currentUser == null) {
             return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
         }
-        if (productId==null||count==null){
+        if (productId == null || count == null) {
             return ServerResponse.buildUnSuccessfulMsgResponse("参数有误!!!");
 
         }
         return cartService.addProductToCart(currentUser.getId(), productId, count);
+    }
+
+    @RequestMapping(value = "update.do")
+    @ResponseBody
+    public ServerResponse<CartVO> updateProductInCart(HttpSession session,
+                                                      @RequestParam Integer count,
+                                                      @RequestParam(value = "product_id") Integer productId) {
+        User currentUser = (User) session.getAttribute(AppConstants.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
+        }
+        if (productId == null || count == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("参数有误!!!");
+
+        }
+        return cartService.updateProductInCart(currentUser.getId(), productId, count);
+    }
+
+    @RequestMapping(value = "delete.do")
+    @ResponseBody
+    public ServerResponse<CartVO> deleteProductFromCart(HttpSession session,
+                                                        @RequestParam("product_id_list") String productIdList) {
+        User currentUser = (User) session.getAttribute(AppConstants.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
+        }
+        return cartService.deleteProductFromCart(productIdList, currentUser.getId());
+    }
+
+    @RequestMapping(value = "list.do")
+    @ResponseBody
+    public ServerResponse<CartVO> listProductFromCart(HttpSession session) {
+        User currentUser = (User) session.getAttribute(AppConstants.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
+        }
+        return cartService.getProductFromCart(currentUser.getId());
+    }
+
+    @RequestMapping(value = "select.do")
+    @ResponseBody
+    public ServerResponse<CartVO> selectProductFromCart(HttpSession session,
+                                                        @RequestParam(value = "checked",
+                                                                required = true,
+                                                                defaultValue = "true") boolean checked,
+                                                        @RequestParam(value = "product_id", required = false) Integer productId) {
+        User currentUser = (User) session.getAttribute(AppConstants.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
+        }
+        return cartService.selectOrUnSelect(currentUser.getId(), checked ? AppConstants.CartStatus.CHECKED : AppConstants.CartStatus.UN_CHECKED, productId);
+    }
+
+    @RequestMapping(value = "get_cart_count.do")
+    @ResponseBody
+    public ServerResponse<Integer> getCartCount(HttpSession session) {
+        User currentUser = (User) session.getAttribute(AppConstants.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.buildUnSuccessfulMsgResponse("请登录后操作!!!");
+        }
+        return cartService.getCartCount(currentUser.getId());
     }
 }
